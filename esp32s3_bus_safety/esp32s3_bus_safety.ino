@@ -1,6 +1,136 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <esp_system.h>
+#include <WiFiClientSecure.h>
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+#include <time.h>
+#include <Preferences.h>
+#include "inputs.h"
+#if __has_include("bus_config.h")
+#include "bus_config.h"
+#else
+#include "config.example.h"
+#endif
+
+struct TelemetrySnapshot {
+  bool ignition;
+  bool pir;
+  bool ready;
+  bool alarm;
+  bool checking;
+  bool fan;
+  bool buzzer;
+  uint16_t passengers;
+  uint32_t inspection;
+  uint32_t boarded;
+  uint32_t alighted;
+  uint32_t remaining;
+};
+QueueHandle_t telemetryQueue;
+QueueHandle_t commandQueue;
+struct RemoteCommand { int code; int people; char id[40]; };
+QueueHandle_t ackQueue;
+bool remoteFanOn = false;
+uint32_t remoteFanStarted = 0;
+bool buzzerSilenced = false;
+uint32_t buzzerSilencedAt = 0;
+uint16_t aiPeople = 0;
+uint32_t aiUpdated = 0;
+uint32_t inspectionSequence = 0;
+uint32_t bootId = 0;
+uint32_t totalBoarded = 0;
+uint32_t totalAlighted = 0;
+Preferences storage;
+
+// Network I/O runs outside loop(): sensor sampling and local alarms keep running.
+void networkTask(void *) {
+  WiFi.mode(WIFI_STA);
+  WiFi.setAutoReconnect(true);
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  WiFiClientSecure tls;
+  tls.setCACert(MQTT_ROOT_CA);
+  PubSubClient mqtt(tls);
+  mqtt.setServer(MQTT_HOST, MQTT_PORT);
+  mqtt.setBufferSize(1024);
+  mqtt.setSocketTimeout(2);
+  mqtt.setCallback([&](char *topic, byte *bytes, unsigned int length) {
+    JsonDocument command;
+    if (deserializeJson(command, bytes, length)) return;
+    if (String(command["device_id"] | "") != DEVICE_ID) return;
+    if (time(nullptr) > command["expires_at"].as<long>()) return;
+    String action = command["action"] | "";
+    int code = action == "FAN_ON" ? 1 : (action == "FAN_AUTO" ? 0 : (action == "AI_PRESENCE" ? 2 : (action == "BUZZER_SILENCE" ? 3 : (action == "BUZZER_AUTO" ? 4 : -1))));
+    if (code < 0 || !commandQueue) return;
+    RemoteCommand received;
+    received.code = code;
+    received.people = command["person_count"] | 0;
+    strlcpy(received.id, command["command_id"] | "", sizeof(received.id));
+    if (!strlen(received.id)) return;
+    xQueueOverwrite(commandQueue, &received);
+  });
+  uint32_t lastMqttAttempt = millis() - 10000;
+  uint32_t lastAttempt = millis() - 10000;
+  for (;;) {
+    TelemetrySnapshot sample;
+    if (xQueueReceive(telemetryQueue, &sample, pdMS_TO_TICKS(1000)) != pdTRUE) continue;
+    if (WiFi.status() != WL_CONNECTED) {
+      if (millis() - lastAttempt >= 10000) {
+        WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+        lastAttempt = millis();
+      }
+      continue;
+    }
+    if (strlen(MQTT_HOST) && !mqtt.connected() && millis() - lastMqttAttempt >= 10000 && time(nullptr) > 1700000000) {
+      lastMqttAttempt = millis();
+      if (mqtt.connect(DEVICE_ID, MQTT_USERNAME, MQTT_PASSWORD)) mqtt.subscribe((String("bus/") + DEVICE_ID + "/commands").c_str(), 1);
+    }
+    mqtt.loop();
+    RemoteCommand applied;
+    if (mqtt.connected() && ackQueue && xQueuePeek(ackQueue, &applied, 0) == pdTRUE) {
+      String ack = String("{\"device_id\":\"") + DEVICE_ID + "\",\"command_id\":\"" + applied.id + "\"}";
+      if (mqtt.publish((String("bus/") + DEVICE_ID + "/acks").c_str(), ack.c_str())) xQueueReceive(ackQueue, &applied, 0);
+    }
+    char body[512];
+    char inspection[48];
+    snprintf(inspection, sizeof(inspection), "%lu-%lu", (unsigned long)bootId, (unsigned long)sample.inspection);
+    snprintf(body, sizeof(body),
+      "{\"device_id\":\"%s\",\"state\":\"%s\",\"ignition_on\":%s,\"passenger_count\":%u,\"pir_detected\":%s,\"pir_ready\":%s,\"fan_on\":%s,\"inspection_id\":%s}",
+      DEVICE_ID, sample.alarm ? "WARNING" : (sample.checking ? "CHECK" : "NORMAL"),
+      sample.ignition ? "true" : "false", sample.passengers,
+      sample.pir ? "true" : "false", sample.ready ? "true" : "false",
+      sample.fan ? "true" : "false", "null");
+    // Replace null with the stable inspection token only after a physical inspection.
+    String payload(body);
+    if (sample.inspection > 0) payload.replace("\"inspection_id\":null", String("\"inspection_id\":\"") + inspection + "\"");
+    JsonDocument telemetry;
+    deserializeJson(telemetry, payload);
+    telemetry["total_boarded"] = sample.boarded;
+    telemetry["total_alighted"] = sample.alighted;
+    telemetry["check_remaining"] = sample.remaining;
+    telemetry["buzzer_on"] = sample.buzzer;
+    payload = "";
+    serializeJson(telemetry, payload);
+    if (strlen(MQTT_HOST)) {
+      if (mqtt.connected()) mqtt.publish((String("bus/") + DEVICE_ID + "/telemetry").c_str(), payload.c_str(), false);
+      continue;
+    }
+    WiFiClient client;
+    HTTPClient http;
+    http.setConnectTimeout(1500);
+    http.setTimeout(1500);
+    if (http.begin(client, String(API_BASE_URL) + "/api/telemetry")) {
+      http.addHeader("Content-Type", "application/json");
+      http.addHeader("X-Device-Key", DEVICE_API_KEY);
+      int result = http.POST(payload);
+      if (result < 200 || result >= 300) Serial.printf("Telemetry failed: %d\n", result);
+      http.end();
+    }
+  }
+}
 
 // ESP32-S3 bus safety prototype. Pin map follows the supplied wiring notes.
 // The two LM393 modules in the photos are used as sequential door sensors.
@@ -36,12 +166,6 @@ constexpr int SCREEN_WIDTH = 128;
 constexpr int SCREEN_HEIGHT = 64;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-struct DebouncedInput {
-  bool rawActive;
-  bool stableActive;
-  uint32_t lastChangeMs;
-};
-
 enum DoorSequence : uint8_t { DOOR_NONE, IR1_FIRST, IR2_FIRST };
 
 DebouncedInput ir1Input = {false, false, 0};
@@ -59,6 +183,9 @@ uint32_t lastSerialMs = 0;
 uint16_t passengerCount = 0;
 DoorSequence doorSequence = DOOR_NONE;
 uint32_t doorSequenceStartedMs = 0;
+bool doorSecondSeen = false;
+bool doorTurnedBack = false;
+bool doorWaitClear = false;
 
 bool isActiveLevel(uint8_t pin, uint8_t activeLevel) {
   return digitalRead(pin) == activeLevel;
@@ -109,6 +236,9 @@ void applyOutputs() {
     writeActiveLevel(PIN_BUZZER, false, false);
     writeActiveLevel(PIN_RELAY, false, RELAY_ACTIVE_LOW);
   }
+  // Remote FAN_AUTO never overrides an active local alarm.
+  if (remoteFanOn) writeActiveLevel(PIN_RELAY, true, RELAY_ACTIVE_LOW);
+  if (buzzerSilenced) writeActiveLevel(PIN_BUZZER, false, false);
 }
 
 bool ignitionIsOn() {
@@ -127,19 +257,23 @@ void startCabinCheck(const __FlashStringHelper *reason, uint32_t now) {
 void raiseAlarm(const __FlashStringHelper *reason) {
   cabinCheckPending = false;
   alarmLatched = true;
+  storage.putBool("alarm", true);
   Serial.print(F("ALARM: "));
   Serial.println(reason);
   applyOutputs();
 }
 
 void clearAfterInspection(bool pirDetected) {
-  if (pirDetected) {
+  if (pirDetected || (aiPeople > 0 && millis() - aiUpdated < 15000)) {
     Serial.println(F("Button pressed, but PIR still detects motion; alarm remains."));
     return;
   }
   cabinCheckPending = false;
   alarmLatched = false;
   passengerCount = 0;
+  storage.putUShort("count", passengerCount);
+  storage.putBool("alarm", false);
+  ++inspectionSequence;
   doorSequence = DOOR_NONE;
   Serial.println(F("Cabin check confirmed. Passenger count reset to 0."));
   applyOutputs();
@@ -147,48 +281,65 @@ void clearAfterInspection(bool pirDetected) {
 
 void changePassengerCount(int delta) {
   if (delta > 0) {
+    ++totalBoarded;
     if (passengerCount < 999) ++passengerCount;
     Serial.print(F("Passenger entered. Count="));
     Serial.println(passengerCount);
   } else if (passengerCount > 0) {
+    ++totalAlighted;
     --passengerCount;
     Serial.print(F("Passenger exited. Count="));
     Serial.println(passengerCount);
   } else {
     Serial.println(F("Exit detected while count is already 0; count unchanged."));
   }
+  storage.putUShort("count", passengerCount);
+  storage.putUInt("boarded", totalBoarded);
+  storage.putUInt("alighted", totalAlighted);
 }
 
 void processDoorEvents(bool ir1Blocked, bool ir2Blocked, uint32_t now) {
+  const bool first = ir1Input.stableActive;
+  const bool second = ir2Input.stableActive;
+  if (doorWaitClear) {
+    if (!first && !second) doorWaitClear = false;
+    return;
+  }
   if (doorSequence != DOOR_NONE &&
       (now - doorSequenceStartedMs) > IR_SEQUENCE_TIMEOUT_MS) {
     doorSequence = DOOR_NONE;
+    doorSecondSeen = false;
+    doorWaitClear = first || second;
+    return;
   }
 
   // If both sensors trigger in the same loop, direction is ambiguous. Ignore it.
   if (ir1Blocked && ir2Blocked) {
     doorSequence = DOOR_NONE;
+    doorWaitClear = true;
     Serial.println(F("Both door sensors triggered together; direction ignored."));
     return;
   }
 
-  if (ir1Blocked) {
-    if (doorSequence == IR2_FIRST) {
-      changePassengerCount(-1);  // IR2 then IR1: exit
-      doorSequence = DOOR_NONE;
-    } else if (doorSequence == DOOR_NONE) {
-      doorSequence = IR1_FIRST;
-      doorSequenceStartedMs = now;
-    }
+  if (doorSequence == DOOR_NONE) {
+    if (!ir1Blocked && !ir2Blocked) return;
+    doorSequence = ir1Blocked ? IR1_FIRST : IR2_FIRST;
+    doorSequenceStartedMs = now;
+    doorSecondSeen = false;
+    doorTurnedBack = false;
+  } else if ((doorSequence == IR1_FIRST && ir2Blocked) ||
+             (doorSequence == IR2_FIRST && ir1Blocked)) {
+    doorSecondSeen = true;
   }
-
-  if (ir2Blocked) {
-    if (doorSequence == IR1_FIRST) {
-      changePassengerCount(1);   // IR1 then IR2: enter
+  // Count only once the full crossing has cleared both beams. Returning to the
+  // initial beam after reaching the second beam cancels a turnaround.
+  if (doorSecondSeen) {
+    if (doorSequence == IR1_FIRST && first && !second) doorTurnedBack = true;
+    if (doorSequence == IR2_FIRST && second && !first) doorTurnedBack = true;
+    if (!first && !second) {
+      if (!doorTurnedBack) changePassengerCount(doorSequence == IR1_FIRST ? 1 : -1);
       doorSequence = DOOR_NONE;
-    } else if (doorSequence == DOOR_NONE) {
-      doorSequence = IR2_FIRST;
-      doorSequenceStartedMs = now;
+      doorSecondSeen = false;
     }
   }
 }
@@ -263,6 +414,17 @@ void printStatus(bool ignitionOn, bool pirDetected, bool pirReady) {
 
 void setup() {
   Serial.begin(115200);
+  storage.begin("bus-safety", false);
+  passengerCount = storage.getUShort("count", 0);
+  if (passengerCount > 999) passengerCount = 999;
+  alarmLatched = storage.getBool("alarm", false);
+  totalBoarded = storage.getUInt("boarded", 0);
+  totalAlighted = storage.getUInt("alighted", 0);
+  bootId = esp_random();
+  telemetryQueue = xQueueCreate(1, sizeof(TelemetrySnapshot));
+  commandQueue = xQueueCreate(1, sizeof(RemoteCommand));
+  ackQueue = xQueueCreate(1, sizeof(RemoteCommand));
+  if (telemetryQueue) xTaskCreate(networkTask, "network", 8192, nullptr, 1, nullptr);
 
   // Initialize actuators in their inactive state before enabling output mode.
   digitalWrite(PIN_BUZZER, LOW);
@@ -279,7 +441,7 @@ void setup() {
   pinMode(PIN_IR_1, INPUT_PULLUP);
   pinMode(PIN_IR_2, INPUT_PULLUP);
   pinMode(PIN_PIR, INPUT);
-  pinMode(PIN_IGNITION, INPUT);  // Switch connects GPIO10 to 3V3 or GND.
+  pinMode(PIN_IGNITION, INPUT_PULLDOWN);  // Switch connects GPIO10 to 3V3.
   pinMode(PIN_SAFETY_BUTTON,
           SAFETY_BUTTON_ACTIVE_LOW ? INPUT_PULLUP : INPUT_PULLDOWN);
   pinMode(PIN_SAFETY_BUTTON_2,
@@ -301,12 +463,35 @@ void setup() {
 
   previousIgnitionOn = ignitionIsOn();
   applyOutputs();
-  Serial.println(F("Firmware ready. Passenger count starts at 0."));
+  Serial.println(F("Firmware ready. Passenger count/alarm restored from NVS."));
   Serial.println(F("Wait 30 seconds for HC-SR501 warm-up."));
 }
 
 void loop() {
   const uint32_t now = millis();
+  RemoteCommand remoteCommand;
+  if (commandQueue && xQueueReceive(commandQueue, &remoteCommand, 0) == pdTRUE) {
+    if (remoteCommand.code == 2) {
+      aiPeople = constrain(remoteCommand.people, 0, 999);
+      aiUpdated = now;
+    } else if (remoteCommand.code == 3 || remoteCommand.code == 4) {
+      buzzerSilenced = remoteCommand.code == 3;
+      buzzerSilencedAt = now;
+    } else {
+      remoteFanOn = remoteCommand.code == 1;
+      remoteFanStarted = now;
+    }
+    applyOutputs();
+    if (ackQueue) xQueueOverwrite(ackQueue, &remoteCommand);
+  }
+  if (remoteFanOn && now - remoteFanStarted > 300000) {
+    remoteFanOn = false;
+    applyOutputs();
+  }
+  if (buzzerSilenced && now - buzzerSilencedAt >= 30000) {
+    buzzerSilenced = false;
+    applyOutputs();
+  }
   const bool ignitionOn = ignitionIsOn();
   const bool pirDetected = digitalRead(PIN_PIR) == HIGH;
   const bool pirReady = now >= PIR_WARMUP_MS;
@@ -343,7 +528,7 @@ void loop() {
   // With passengers counted, or motion detected, turning off the vehicle
   // starts a 15-second rear-cabin confirmation window.
   if (!ignitionOn && !alarmLatched && !cabinCheckPending &&
-      (passengerCount > 0 || (pirReady && pirDetected))) {
+      (passengerCount > 0 || (pirReady && pirDetected) || (aiPeople > 0 && now - aiUpdated < 15000))) {
     startCabinCheck(passengerCount > 0
                         ? F("passenger count is not zero")
                         : F("PIR motion while ignition is OFF"),
@@ -365,6 +550,10 @@ void loop() {
   }
   if (now - lastSerialMs >= SERIAL_REFRESH_MS) {
     printStatus(ignitionOn, pirDetected, pirReady);
+    uint32_t remaining = cabinCheckPending && now - cabinCheckStartedMs < CABIN_CHECK_MS ? (CABIN_CHECK_MS - (now - cabinCheckStartedMs) + 999) / 1000 : 0;
+    TelemetrySnapshot sample = {ignitionOn, pirDetected, pirReady, alarmLatched, cabinCheckPending, alarmLatched || remoteFanOn, alarmLatched && !buzzerSilenced, passengerCount, inspectionSequence, totalBoarded, totalAlighted, remaining};
+    if (telemetryQueue) xQueueOverwrite(telemetryQueue, &sample);
     lastSerialMs = now;
   }
+  delay(1);
 }

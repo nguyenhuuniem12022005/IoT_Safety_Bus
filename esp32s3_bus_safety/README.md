@@ -1,5 +1,7 @@
 # Firmware ESP32-S3 cho mạch xe buýt
 
+> Xem [cấu hình mạng và nạp hiện hành](../docs/SETUP-AND-TEST.md). Firmware hiện đã có Wi-Fi, MQTT/TLS, HTTP dự phòng và AI presence qua backend. Cần cấu hình `bus_config.h` trước khi nạp.
+
 Firmware này dùng cặp cảm biến IR trong ảnh để đếm người qua cửa, PIR HC-SR501 để phát hiện chuyển động khi xe tắt máy, và điều khiển còi, relay/quạt, LED RGB cùng OLED.
 
 ## Sơ đồ GPIO theo tài liệu nối mạch
@@ -44,4 +46,4 @@ Các module LM393 trong ảnh có biến trở chỉnh ngưỡng. Code mặc đ�
 
 Nếu relay bật khi hệ thống đang bình thường, đổi `RELAY_ACTIVE_LOW` ở đầu file thành `false`. Nếu nút KY-004 không nhận khi bấm, kiểm tra chân S/+/- và đổi `SAFETY_BUTTON_ACTIVE_LOW` nếu module xuất mức HIGH khi bấm. Nếu RGB hiển thị màu ngược, chỉnh `RGB_COMMON_ANODE`.
 
-Chỉ đưa tín hiệu công tắc 3.3V vào GPIO10; không nối điện khóa xe 12V/24V trực tiếp vào ESP32. Firmware này điều khiển mạch mô hình tại chỗ, chưa kết nối Wi-Fi/MQTT, camera AI hay WebApp.
+Chỉ đưa tín hiệu công tắc 3.3V vào GPIO10; không nối điện khóa xe 12V/24V trực tiếp vào ESP32. Firmware vẫn cảnh báo cục bộ khi mất Wi-Fi; camera YOLOv8 chạy trên laptop, không chạy trên ESP32.
