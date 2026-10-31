@@ -21,4 +21,4 @@ uvicorn app.main:app --reload --port 8000
 
 Swagger: http://localhost:8000/docs. Dữ liệu được lưu trên MongoDB Atlas, không dùng SQLite.
 
-Để bật YOLOv8: cài `requirements-ai.txt`; chạy `camera_worker.py --source 0 --preview` hoặc gọi `POST /api/yolo/detect` với ảnh sau khi đăng nhập. Không có database giả ở runtime. Bộ test dùng mongomock riêng.
+Để bật YOLOv8: cài `requirements-ai.txt`; chạy `camera_worker.py --source 0 --preview`. Worker gửi kết quả đếm người vào `POST /api/detections` và khung hình có bounding box vào `POST /api/camera/frame`; bàn trực xem qua `GET /api/camera/frame`. Không có database giả ở runtime. Bộ test dùng mongomock riêng.

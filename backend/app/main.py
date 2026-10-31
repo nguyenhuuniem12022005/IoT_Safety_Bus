@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 from typing import Literal
 from typing import Any
 
-from fastapi import FastAPI, File, HTTPException, UploadFile, Depends, Header, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Depends, Header, Request, Response, WebSocket, WebSocketDisconnect
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 from pwdlib import PasswordHash
@@ -82,7 +82,11 @@ class Detection(BaseModel):
     device_id: str = Field(default="bus-01", pattern=r"^[a-zA-Z0-9_-]{1,40}$")
     person_count: int = Field(default=0, ge=0)
     confidence: float = Field(default=0.0, ge=0, le=1)
-    source: Literal["camera", "upload"] = "camera"
+    source: Literal["camera"] = "camera"
+
+
+MAX_FRAME_BYTES = 2 * 1024 * 1024
+latest_frames: dict[str, dict[str, Any]] = {}
 
 
 @asynccontextmanager
@@ -109,7 +113,7 @@ app = FastAPI(title="IoT Safety Bus API", version="1.0.0", lifespan=lifespan)
 @app.exception_handler(PyMongoError)
 async def database_error(request, exc):
     return JSONResponse(status_code=503, content={"detail": "Database unavailable. Check backend logs and Atlas connection."})
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"], expose_headers=["X-Captured-At", "X-Person-Count"])
 
 
 class Login(BaseModel):
@@ -179,11 +183,11 @@ def ingest_telemetry(telemetry: Telemetry) -> dict[str, Any]:
     if previous and (previous.get("total_boarded", 0) != telemetry.total_boarded or previous.get("total_alighted", 0) != telemetry.total_alighted):
         record_event(telemetry.device_id, "PASSENGER_COUNT", f"Sĩ số: {telemetry.passenger_count}; tổng lên: {telemetry.total_boarded}; tổng xuống: {telemetry.total_alighted}", "info", telemetry.model_dump())
     if telemetry.state == "CHECK" and (not previous or previous["state"] != "CHECK"):
-        record_event(telemetry.device_id, "SAFETY_CHECK", "Rear-cabin inspection countdown started", "warning", telemetry.model_dump())
+        record_event(telemetry.device_id, "SAFETY_CHECK", "Tắt khóa điện khi còn người: bắt đầu đếm ngược kiểm tra khoang xe", "warning", telemetry.model_dump())
     if telemetry.state == "WARNING" and (not previous or previous["state"] != "WARNING"):
         record_event(telemetry.device_id, "ALARM", "Phát hiện nguy cơ còn người trên xe", "critical", telemetry.model_dump())
     if telemetry.inspection_id and (not previous or previous.get("inspection_id") != telemetry.inspection_id):
-        record_event(telemetry.device_id, "INSPECTION", "Physical rear-button inspection confirmed", "info", telemetry.model_dump())
+        record_event(telemetry.device_id, "INSPECTION", "Đã bấm nút kiểm tra cuối xe", "info", telemetry.model_dump())
     return {"accepted": True, "updated_at": now}
 
 
@@ -194,30 +198,38 @@ def ingest_detection(detection: Detection) -> dict[str, Any]:
     if detection.person_count > 0 and (not previous or previous["person_count"] == 0):
         record_event(detection.device_id, "YOLO_DETECTION", f"YOLO phát hiện {detection.person_count} người", "warning", detection.model_dump())
     bridge = getattr(app.state, "bridge", None)
-    if detection.source == "camera" and bridge and bridge.is_connected():
+    if bridge and bridge.is_connected():
         bridge.publish(f"bus/{detection.device_id}/commands", json.dumps({"device_id": detection.device_id, "action": "AI_PRESENCE", "person_count": detection.person_count, "command_id": uuid.uuid4().hex, "expires_at": int(time.time()) + 15}), qos=1, retain=False)
     return {"accepted": True, "id": str(result.inserted_id)}
 
 
 @app.post("/api/alarm/ack", dependencies=[Depends(operator)])
 def acknowledge_alarm(device_id: str = "bus-01") -> dict[str, bool]:
-    record_event(device_id, "ACKNOWLEDGED", "Operator acknowledged alert; physical inspection still required", "info", {})
+    record_event(device_id, "ACKNOWLEDGED", "Điều hành đã nhận cảnh báo; vẫn cần kiểm tra thực tế cuối xe", "info", {})
     return {"accepted": True}
 
 
-@app.post("/api/yolo/detect", dependencies=[Depends(operator)])
-async def detect_image(file: UploadFile = File(...), device_id: str = "bus-01") -> dict[str, Any]:
-    try:
-        from .yolo_service import detect_people
-        content = await file.read(8 * 1024 * 1024 + 1)
-        if len(content) > 8 * 1024 * 1024:
-            raise HTTPException(413, "Image exceeds 8 MB")
-        result = await detect_people(content)
-    except ImportError as exc:
-        raise HTTPException(status_code=503, detail="YOLO chưa được cài. Chạy: pip install ultralytics opencv-python") from exc
-    payload = Detection(device_id=device_id, person_count=result["person_count"], confidence=result["confidence"], source="upload")
-    await asyncio.to_thread(ingest_detection, payload)
-    return result
+@app.post("/api/camera/frame", dependencies=[Depends(device)])
+async def ingest_frame(request: Request, device_id: str = "bus-01", person_count: int = 0) -> dict[str, bool]:
+    if not request.headers.get("content-type", "").startswith("image/jpeg"):
+        raise HTTPException(415, "Expected image/jpeg")
+    content = await request.body()
+    if not content or len(content) > MAX_FRAME_BYTES:
+        raise HTTPException(413, "Frame must be a JPEG up to 2 MB")
+    latest_frames[device_id] = {"jpeg": content, "captured_at": time.time(), "person_count": max(0, person_count)}
+    return {"accepted": True}
+
+
+@app.get("/api/camera/frame", dependencies=[Depends(operator)])
+def camera_frame(device_id: str = "bus-01") -> Response:
+    frame = latest_frames.get(device_id)
+    if frame is None:
+        raise HTTPException(404, "Camera has not sent a frame yet")
+    return Response(frame["jpeg"], media_type="image/jpeg", headers={
+        "Cache-Control": "no-store",
+        "X-Captured-At": f"{frame['captured_at']:.3f}",
+        "X-Person-Count": str(frame["person_count"]),
+    })
 
 
 class Command(BaseModel):

@@ -13,7 +13,7 @@
 
 Ảnh thử YOLO lấy từ nguồn chính thức: https://raw.githubusercontent.com/ultralytics/assets/main/im/bus.jpg. Model tải từ Ultralytics assets. Không đưa ảnh mẫu hay model vào Git.
 
-Các test API bao gồm: JWT/device key, login sai; lưu-đọc trạng thái; lịch sử telemetry; chuyển alarm không lặp; dữ liệu âm/state không hợp lệ; web ACK không xóa alarm vật lý; sự kiện kiểm tra không lặp; offline; detection; MQTT không kết nối; WebSocket yêu cầu JWT; publish lệnh và AI camera/ảnh upload được xử lý khác nhau. MQTT publish dùng test double, chưa kết nối broker TLS thật.
+Các test API bao gồm: JWT/device key, login sai; lưu-đọc trạng thái; lịch sử telemetry; chuyển alarm không lặp; dữ liệu âm/state không hợp lệ; web ACK không xóa alarm vật lý; sự kiện kiểm tra không lặp; offline; detection; MQTT không kết nối; WebSocket yêu cầu JWT; publish lệnh; detection không phải nguồn camera bị từ chối; khung hình camera yêu cầu device key khi gửi, JWT khi xem và chỉ nhận JPEG. MQTT publish dùng test double, chưa kết nối broker TLS thật.
 
 ## Cần cấu hình và nghiệm thu trên hệ thống thật
 
@@ -25,4 +25,4 @@ Các test API bao gồm: JWT/device key, login sai; lưu-đọc trạng thái; l
 
 ## Chưa triển khai
 
-Không có cloud deploy tự động, Zalo/Telegram, stream video lên web, quản trị nhiều tài khoản/RBAC nhiều vai trò, audit chống sửa bằng mật mã, hàng đợi telemetry bền vững hoặc MQTT QoS1 end-to-end. Các phần này không được coi là đã hoàn tất trong báo cáo.
+Không có cloud deploy tự động, Zalo/Telegram, video liên tục (web chỉ xem khung JPEG ~1 giây/lần), quản trị nhiều tài khoản/RBAC nhiều vai trò, audit chống sửa bằng mật mã, hàng đợi telemetry bền vững hoặc MQTT QoS1 end-to-end. Các phần này không được coi là đã hoàn tất trong báo cáo.

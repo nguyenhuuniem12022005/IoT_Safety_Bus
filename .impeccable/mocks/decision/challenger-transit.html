@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font-family:"Be Vietnam Pro",sans-serif;background:#0F1F3D;color:#F4F1EA}
+.top{height:60px;display:flex;align-items:center;padding:0 28px;border-bottom:1px solid #24375c}
+.top h1{font-size:18px;font-weight:600}
+.line{position:relative;height:140px;margin:0 60px}
+.line .rail{position:absolute;top:66px;left:0;right:0;height:8px;background:#E4412B;border-radius:4px}
+.st{position:absolute;top:56px;width:28px;height:28px;border-radius:50%;background:#F4F1EA;border:6px solid #E4412B}
+.st.on{background:#E4412B;border-color:#F4F1EA}
+.st span{position:absolute;top:38px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:15px;font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 400px;gap:20px;padding:20px 28px}
+.cam{height:520px;background:#081226;border:1px solid #2F6FD6;border-radius:6px;position:relative}
+.box{position:absolute;left:460px;top:170px;width:140px;height:230px;border:2px solid #F2A93B}
+.p{border:1px solid #24375c;border-radius:6px;padding:18px;margin-bottom:16px}
+.p h3{font-size:13px;opacity:.7}
+.big{font-size:60px;font-weight:700}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #24375c;font-size:14px}
+</style></head><body>
+<div class="top"><h1>Smart Bus · Tuyến BUS-01</h1></div>
+<div class="line"><div class="rail"></div>
+<div class="st" style="left:0"><span>Nổ máy</span></div><div class="st" style="left:32%"><span>Tắt máy</span></div>
+<div class="st on" style="left:64%"><span>Kiểm tra 9s</span></div><div class="st" style="left:96%"><span>Cảnh báo</span></div></div>
+<div class="grid"><div class="cam"><div class="box"></div></div>
+<div><div class="p"><h3>Sĩ số trên xe</h3><div class="big">1</div><div class="row"><span>IR</span><b>1</b></div><div class="row"><span>Camera</span><b>1</b></div></div>
+<div class="p"><h3>Cơ cấu</h3><div class="row"><span>Quạt</span><b>Tự động</b></div><div class="row"><span>Còi</span><b>Tắt</b></div></div></div></div>
+</body></html>

@@ -103,5 +103,18 @@ def test_command_publish_and_camera_fusion(client, monkeypatch):
     import json
     assert json.loads(bridge.messages[-1][1])["action"]=="AI_PRESENCE"
     before=len(bridge.messages)
-    client.post("/api/detections",json={"person_count":1,"source":"upload"},headers={"X-Device-Key":"test-device-key"})
-    assert len(bridge.messages)==before
+    response=client.post("/api/detections",json={"person_count":1,"source":"upload"},headers={"X-Device-Key":"test-device-key"})
+    assert response.status_code==422 and len(bridge.messages)==before
+
+
+def test_camera_frame_requires_device_key_and_streams_latest(client):
+    main.latest_frames.clear()
+    assert client.get("/api/camera/frame",headers=auth(client)).status_code==404
+    jpeg=b"\xff\xd8\xff\xe0fake-jpeg"
+    assert client.post("/api/camera/frame",content=jpeg,headers={"Content-Type":"image/jpeg"}).status_code==401
+    assert client.post("/api/camera/frame",content=b"x",headers={"Content-Type":"image/png","X-Device-Key":"test-device-key"}).status_code==415
+    response=client.post("/api/camera/frame?person_count=2",content=jpeg,headers={"Content-Type":"image/jpeg","X-Device-Key":"test-device-key"})
+    assert response.status_code==200
+    assert client.get("/api/camera/frame").status_code==401
+    frame=client.get("/api/camera/frame",headers=auth(client))
+    assert frame.content==jpeg and frame.headers["x-person-count"]=="2" and float(frame.headers["x-captured-at"])>0

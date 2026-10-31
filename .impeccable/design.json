@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-31T15:30:00+07:00",
+  "title": "Design System: Smart Bus · Bàn trực an toàn",
+  "extensions": {
+    "colorMeta": {
+      "livery": { "role": "primary", "displayName": "Livery Yellow", "canonical": "#f2b01e", "tonalRamp": ["oklch(15% 0.024 80)", "oklch(26% 0.073 80)", "oklch(37% 0.123 80)", "oklch(48% 0.159 80)", "oklch(59% 0.159 80)", "oklch(70% 0.137 80)", "oklch(82% 0.082 80)", "oklch(95% 0.024 80)"] },
+      "livery-edge": { "role": "primary", "displayName": "Livery Edge", "canonical": "#c48d0c", "tonalRamp": ["oklch(15% 0.021 80)", "oklch(26% 0.063 80)", "oklch(37% 0.107 80)", "oklch(48% 0.138 80)", "oklch(59% 0.138 80)", "oklch(70% 0.119 80)", "oklch(82% 0.071 80)", "oklch(95% 0.021 80)"] },
+      "reflect": { "role": "secondary", "displayName": "Reflector Red", "canonical": "#c8201a", "tonalRamp": ["oklch(15% 0.030 29)", "oklch(26% 0.092 29)", "oklch(37% 0.156 29)", "oklch(48% 0.202 29)", "oklch(59% 0.202 29)", "oklch(70% 0.173 29)", "oklch(82% 0.104 29)", "oklch(95% 0.030 29)"] },
+      "reflect-ink": { "role": "secondary", "displayName": "Reflector Ink", "canonical": "#a81a15", "tonalRamp": ["oklch(15% 0.027 29)", "oklch(26% 0.081 29)", "oklch(37% 0.136 29)", "oklch(48% 0.177 29)", "oklch(59% 0.177 29)", "oklch(70% 0.152 29)", "oklch(82% 0.091 29)", "oklch(95% 0.027 29)"] },
+      "amber": { "role": "tertiary", "displayName": "Signal Amber", "canonical": "#f4a51c", "tonalRamp": ["oklch(15% 0.024 73)", "oklch(26% 0.073 73)", "oklch(37% 0.124 73)", "oklch(48% 0.160 73)", "oklch(59% 0.160 73)", "oklch(70% 0.137 73)", "oklch(82% 0.082 73)", "oklch(95% 0.024 73)"] },
+      "amber-ink": { "role": "tertiary", "displayName": "Amber Ink", "canonical": "#8a5300", "tonalRamp": ["oklch(15% 0.016 67)", "oklch(26% 0.050 67)", "oklch(37% 0.084 67)", "oklch(48% 0.109 67)", "oklch(59% 0.109 67)", "oklch(70% 0.094 67)", "oklch(82% 0.056 67)", "oklch(95% 0.016 67)"] },
+      "ok": { "role": "tertiary", "displayName": "Signal Green", "canonical": "#1b7f47", "tonalRamp": ["oklch(15% 0.019 153)", "oklch(26% 0.057 153)", "oklch(37% 0.096 153)", "oklch(48% 0.124 153)", "oklch(59% 0.124 153)", "oklch(70% 0.107 153)", "oklch(82% 0.064 153)", "oklch(95% 0.019 153)"] },
+      "ok-edge": { "role": "tertiary", "displayName": "Green Edge", "canonical": "#0e4f2b", "tonalRamp": ["oklch(15% 0.013 154)", "oklch(26% 0.040 154)", "oklch(37% 0.068 154)", "oklch(48% 0.088 154)", "oklch(59% 0.088 154)", "oklch(70% 0.075 154)", "oklch(82% 0.045 154)", "oklch(95% 0.013 154)"] },
+      "ok-soft": { "role": "tertiary", "displayName": "OK Wash", "canonical": "#e3f2ea", "tonalRamp": ["oklch(15% 0.003 163)", "oklch(26% 0.009 163)", "oklch(37% 0.015 163)", "oklch(48% 0.019 163)", "oklch(59% 0.019 163)", "oklch(70% 0.016 163)", "oklch(82% 0.010 163)", "oklch(95% 0.003 163)"] },
+      "warn-soft": { "role": "tertiary", "displayName": "Check Wash", "canonical": "#fff1d6", "tonalRamp": ["oklch(15% 0.006 84)", "oklch(26% 0.018 84)", "oklch(37% 0.030 84)", "oklch(48% 0.038 84)", "oklch(59% 0.038 84)", "oklch(70% 0.033 84)", "oklch(82% 0.020 84)", "oklch(95% 0.006 84)"] },
+      "alert-soft": { "role": "secondary", "displayName": "Alert Wash", "canonical": "#fbe5e3", "tonalRamp": ["oklch(15% 0.004 24)", "oklch(26% 0.011 24)", "oklch(37% 0.019 24)", "oklch(48% 0.024 24)", "oklch(59% 0.024 24)", "oklch(70% 0.021 24)", "oklch(82% 0.013 24)", "oklch(95% 0.004 24)"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#16181b", "tonalRamp": ["oklch(15% 0.001 258)", "oklch(26% 0.003 258)", "oklch(37% 0.005 258)", "oklch(48% 0.007 258)", "oklch(59% 0.007 258)", "oklch(70% 0.006 258)", "oklch(82% 0.003 258)", "oklch(95% 0.001 258)"] },
+      "ink-2": { "role": "neutral", "displayName": "Ink Two", "canonical": "#3b4148", "tonalRamp": ["oklch(15% 0.002 252)", "oklch(26% 0.007 252)", "oklch(37% 0.011 252)", "oklch(48% 0.014 252)", "oklch(59% 0.014 252)", "oklch(70% 0.012 252)", "oklch(82% 0.007 252)", "oklch(95% 0.002 252)"] },
+      "muted": { "role": "neutral", "displayName": "Muted Grey", "canonical": "#545b63", "tonalRamp": ["oklch(15% 0.002 252)", "oklch(26% 0.007 252)", "oklch(37% 0.012 252)", "oklch(48% 0.016 252)", "oklch(59% 0.016 252)", "oklch(70% 0.013 252)", "oklch(82% 0.008 252)", "oklch(95% 0.002 252)"] },
+      "steel": { "role": "neutral", "displayName": "Painted Steel", "canonical": "#e4e8ec", "tonalRamp": ["oklch(15% 0.001 248)", "oklch(26% 0.003 248)", "oklch(37% 0.005 248)", "oklch(48% 0.007 248)", "oklch(59% 0.007 248)", "oklch(70% 0.006 248)", "oklch(82% 0.004 248)", "oklch(95% 0.001 248)"] },
+      "steel-2": { "role": "neutral", "displayName": "Steel Two", "canonical": "#d5dbe1", "tonalRamp": ["oklch(15% 0.002 248)", "oklch(26% 0.005 248)", "oklch(37% 0.008 248)", "oklch(48% 0.011 248)", "oklch(59% 0.011 248)", "oklch(70% 0.009 248)", "oklch(82% 0.005 248)", "oklch(95% 0.002 248)"] },
+      "panel": { "role": "neutral", "displayName": "Panel White", "canonical": "#ffffff", "tonalRamp": ["oklch(15% 0 0)", "oklch(26% 0 0)", "oklch(37% 0 0)", "oklch(48% 0 0)", "oklch(59% 0 0)", "oklch(70% 0 0)", "oklch(82% 0 0)", "oklch(95% 0 0)"] },
+      "line": { "role": "neutral", "displayName": "Rule", "canonical": "#c8cfd6", "tonalRamp": ["oklch(15% 0.002 248)", "oklch(26% 0.006 248)", "oklch(37% 0.010 248)", "oklch(48% 0.012 248)", "oklch(59% 0.012 248)", "oklch(70% 0.011 248)", "oklch(82% 0.006 248)", "oklch(95% 0.002 248)"] },
+      "line-soft": { "role": "neutral", "displayName": "Soft Rule", "canonical": "#e3e7eb", "tonalRamp": ["oklch(15% 0.001 248)", "oklch(26% 0.003 248)", "oklch(37% 0.005 248)", "oklch(48% 0.007 248)", "oklch(59% 0.007 248)", "oklch(70% 0.006 248)", "oklch(82% 0.004 248)", "oklch(95% 0.001 248)"] },
+      "glass": { "role": "neutral", "displayName": "Glass", "canonical": "#121417", "tonalRamp": ["oklch(15% 0.001 258)", "oklch(26% 0.003 258)", "oklch(37% 0.005 258)", "oklch(48% 0.007 258)", "oklch(59% 0.007 258)", "oklch(70% 0.006 258)", "oklch(82% 0.004 258)", "oklch(95% 0.001 258)"] },
+      "glass-ink": { "role": "neutral", "displayName": "Glass Ink", "canonical": "#e4e8ec", "tonalRamp": ["oklch(15% 0.001 248)", "oklch(26% 0.003 248)", "oklch(37% 0.005 248)", "oklch(48% 0.007 248)", "oklch(59% 0.007 248)", "oklch(70% 0.006 248)", "oklch(82% 0.004 248)", "oklch(95% 0.001 248)"] },
+      "glass-muted": { "role": "neutral", "displayName": "Glass Muted", "canonical": "#a3abb4", "tonalRamp": ["oklch(15% 0.002 251)", "oklch(26% 0.007 251)", "oklch(37% 0.012 251)", "oklch(48% 0.016 251)", "oklch(59% 0.016 251)", "oklch(70% 0.014 251)", "oklch(82% 0.008 251)", "oklch(95% 0.002 251)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Reflective strip label in WARNING only; 21px at ≤720px." },
+      "headline": { "displayName": "Headline", "purpose": "Strip label in NORMAL, CHECK and OFFLINE; login title. 19px at ≤720px." },
+      "readout": { "displayName": "Readout", "purpose": "The three facts in the camera glass; absent values drop to 500 16px Glass Muted." },
+      "title": { "displayName": "Title", "purpose": "Panel and glass headings." },
+      "body": { "displayName": "Body", "purpose": "Base text and the strip message." },
+      "body-dense": { "displayName": "Body Dense", "purpose": "Buttons, tables, control names, verdicts." },
+      "label": { "displayName": "Label", "purpose": "Panel meta, readout terms, legend, links, command rows, hints." },
+      "axis": { "displayName": "Axis", "purpose": "Chart axes and cabin-plan zone label." },
+      "plate": { "displayName": "Plate", "purpose": "The BUS-01 licence plate only." }
+    },
+    "shadows": [
+      { "name": "sticky-hairline", "value": "0 1px 0 var(--line-soft)", "purpose": "Rule under the sticky event-log header; the only shadow in a flat system." }
+    ],
+    "motion": [
+      { "name": "control-feedback", "value": "150ms ease", "purpose": "Button background and border changes on hover and press." },
+      { "name": "tape-in", "value": "420ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Red-and-white warning tape wipes in from the left (clip-path inset) when WARNING begins." },
+      { "name": "countdown", "value": "1s linear", "purpose": "Amber CHECK tape width shrinks with each second of the 15-second countdown." },
+      { "name": "reduced-motion", "value": "none", "purpose": "prefers-reduced-motion removes the tape wipe, the countdown transition and button transitions." }
+    ],
+    "breakpoints": [
+      { "name": "desk-single-column", "value": "1100px" },
+      { "name": "compact", "value": "720px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Remote-control action, always in an equal pair (e.g. 'Bật 5 phút' / 'Tự động').",
+      "html": "<button class=\"ds-btn\" type=\"button\">Bật 5 phút</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 38px; padding: 7px 14px; border: 1px solid var(--ink-2, #3b4148); border-radius: 4px; background: var(--panel, #fff); color: var(--ink, #16181b); font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease; } .ds-btn:hover:not(:disabled) { background: var(--steel, #e4e8ec); } .ds-btn:active:not(:disabled) { background: var(--steel-2, #d5dbe1); } .ds-btn:focus-visible { outline: 2px solid var(--ink, #16181b); outline-offset: 2px; } .ds-btn:disabled { cursor: not-allowed; color: #858d96; border-color: var(--line, #c8cfd6); background: #f3f5f7; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink-filled commit action, used to enter the shift on the login form.",
+      "html": "<button class=\"ds-btn-primary\" type=\"submit\">Vào ca trực</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 7px 14px; border: 1px solid var(--ink, #16181b); border-radius: 4px; background: var(--ink, #16181b); color: #fff; font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms ease; } .ds-btn-primary:hover { background: #2b2f34; } .ds-btn-primary:focus-visible { outline: 2px solid var(--ink, #16181b); outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button on Livery",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-weight action on the yellow livery bar (sign out), with a 16px line icon.",
+      "html": "<div style=\"background:#f2b01e;padding:12px\"><button class=\"ds-btn-ghost\" type=\"button\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\"/><polyline points=\"16 17 21 12 16 7\"/><line x1=\"21\" x2=\"9\" y1=\"12\" y2=\"12\"/></svg>Đăng xuất</button></div>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 10px; border: 1px solid rgba(22, 24, 27, 0.55); border-radius: 4px; background: transparent; color: var(--ink, #16181b); font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms ease; } .ds-btn-ghost:hover { background: rgba(22, 24, 27, 0.08); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--ink, #16181b); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Login field with its label stacked above; focus is a flush livery-yellow ring.",
+      "html": "<label class=\"ds-field\">Tài khoản<input class=\"ds-input\" name=\"username\" autocomplete=\"username\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 14px; font-weight: 500; color: var(--ink, #16181b); } .ds-input { min-height: 40px; padding: 8px 12px; border: 1px solid #9aa3ad; border-radius: 4px; background: #fff; font: inherit; font-weight: 400; color: inherit; } .ds-input:focus-visible { outline: 2px solid var(--livery, #f2b01e); outline-offset: 0; border-color: var(--ink, #16181b); }"
+    },
+    {
+      "name": "Livery Bar",
+      "kind": "nav",
+      "refersTo": "livery-bar",
+      "description": "The only navigation: yellow bus-body band with the plate, product name and connection lights.",
+      "html": "<header class=\"ds-livery\"><div class=\"ds-brand\"><span class=\"ds-plate\">BUS-01</span><span class=\"ds-brand-name\">Smart Bus</span><span class=\"ds-brand-role\">Bàn trực an toàn</span></div><div class=\"ds-links\"><span class=\"ds-link is-on\"><i></i>Máy chủ <span class=\"ds-link-state\">kết nối</span></span><span class=\"ds-link\"><i></i>Camera <span class=\"ds-link-state\">không có hình</span></span></div></header>",
+      "css": ".ds-livery { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 24px; min-height: 56px; padding: 8px 24px; background: var(--livery, #f2b01e); border-bottom: 1px solid var(--livery-edge, #c48d0c); color: var(--ink, #16181b); font-family: 'Be Vietnam Pro', system-ui, sans-serif; } .ds-brand { display: flex; align-items: baseline; gap: 14px; } .ds-plate { align-self: center; padding: 3px 10px; border: 1.5px solid var(--ink, #16181b); border-radius: 3px; background: #fff; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; } .ds-brand-name { font-weight: 700; font-size: 17px; } .ds-brand-role { color: #4a3a0f; font-size: 14px; } .ds-links { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; } .ds-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; } .ds-link i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--ink, #16181b); } .ds-link.is-on i { background: var(--ok, #1b7f47); border-color: #0e4f2b; } .ds-link-state { color: #4a3a0f; font-weight: 400; }"
+    },
+    {
+      "name": "Reflective Strip · Warning",
+      "kind": "custom",
+      "refersTo": "strip-warning",
+      "description": "Full-width WARNING band: red owns the strip, white message block, red-and-white tape wiping in, ink acknowledge button.",
+      "html": "<div class=\"ds-strip is-warning\" role=\"alert\"><strong class=\"ds-strip-label\">Còn người trên xe</strong><span class=\"ds-strip-message\">Báo động từ 15:42:10 · Cử người kiểm tra khoang xe ngay</span><span class=\"ds-tape\"><span class=\"ds-tape-run\"></span></span><button class=\"ds-strip-ack\" type=\"button\">Đã nhận cảnh báo</button></div>",
+      "css": ".ds-strip { display: flex; align-items: stretch; min-height: 60px; font-family: 'Be Vietnam Pro', system-ui, sans-serif; } .ds-strip.is-warning { background: var(--reflect, #c8201a); border-bottom: 1px solid var(--reflect-ink, #a81a15); } .ds-strip-label, .ds-strip-message { display: flex; align-items: center; padding: 0 20px; } .ds-strip-label { padding-left: 24px; font-size: 26px; font-weight: 700; line-height: 1.2; white-space: nowrap; color: #fff; } .ds-strip-message { background: #fff; color: var(--reflect-ink, #a81a15); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-tape { flex: 1; position: relative; overflow: hidden; } .ds-tape-run { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, var(--reflect, #c8201a) 0 56px, #fff 56px 112px); animation: ds-tape-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-strip-ack { align-self: center; margin: 0 24px 0 16px; min-height: 38px; padding: 7px 14px; border: 1px solid var(--ink, #16181b); border-radius: 4px; background: var(--ink, #16181b); color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; } .ds-strip-ack:hover { background: #000; } .ds-strip-ack:focus-visible { outline: 2px solid var(--ink, #16181b); outline-offset: 2px; } @keyframes ds-tape-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } } @media (prefers-reduced-motion: reduce) { .ds-tape-run { animation: none; } }"
+    },
+    {
+      "name": "Reflective Strip · Check",
+      "kind": "custom",
+      "refersTo": "strip-check",
+      "description": "CHECK countdown band: warm wash, label on an amber plate, amber-and-white tape shrinking with the remaining seconds.",
+      "html": "<div class=\"ds-strip-check\" role=\"status\"><strong class=\"ds-check-label\">Đang kiểm tra khoang xe</strong><span class=\"ds-check-message\">Còn 9 giây trước khi báo động</span><span class=\"ds-check-tape\"><span class=\"ds-check-run\" style=\"width:60%\"></span></span></div>",
+      "css": ".ds-strip-check { display: flex; align-items: stretch; min-height: 60px; background: var(--warn-soft, #fff1d6); border-bottom: 1px solid #e8c27a; font-family: 'Be Vietnam Pro', system-ui, sans-serif; } .ds-check-label { display: flex; align-items: center; padding: 0 20px 0 24px; background: var(--amber, #f4a51c); color: var(--ink, #16181b); font-size: 22px; font-weight: 700; line-height: 1.2; white-space: nowrap; } .ds-check-message { display: flex; align-items: center; padding: 0 20px; color: var(--ink-2, #3b4148); font-size: 15px; font-variant-numeric: tabular-nums; } .ds-check-tape { flex: 1; position: relative; overflow: hidden; } .ds-check-run { position: absolute; inset: 0 auto 0 0; background: repeating-linear-gradient(90deg, var(--amber, #f4a51c) 0 56px, #fff 56px 112px); transition: width 1s linear; } @media (prefers-reduced-motion: reduce) { .ds-check-run { transition: none; } }"
+    },
+    {
+      "name": "Camera Glass",
+      "kind": "custom",
+      "refersTo": "glass",
+      "description": "Dark rounded window holding the 16:9 camera frame beside a readout column of three equal-weight facts.",
+      "html": "<section class=\"ds-glass\"><header class=\"ds-glass-head\"><h2>Camera khoang xe</h2><span>YOLOv8 · vừa xong</span></header><div class=\"ds-frame\"></div><dl class=\"ds-readout\"><div><dt>Khung hình lúc</dt><dd>15:42:31</dd></div><div><dt>Độ tin cậy YOLO</dt><dd>87%</dd></div><div><dt>Kết quả gửi xuống mạch</dt><dd class=\"is-none\">hết hiệu lực</dd></div></dl></section>",
+      "css": ".ds-glass { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; background: var(--glass, #121417); border-radius: 10px; padding: 10px 12px 12px; color: var(--glass-ink, #e4e8ec); font-family: 'Be Vietnam Pro', system-ui, sans-serif; } .ds-glass-head { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 2px 4px 10px; } .ds-glass-head h2 { margin: 0; font-size: 15px; font-weight: 600; } .ds-glass-head span { font-size: 13px; color: var(--glass-muted, #a3abb4); } .ds-frame { width: 320px; aspect-ratio: 16 / 9; border-radius: 6px; background: #0a0b0d; } .ds-readout { margin: 0; display: flex; flex-direction: column; } .ds-readout div { padding: 10px 2px; border-top: 1px solid #2c3036; } .ds-readout div:first-child { border-top: 0; padding-top: 4px; } .ds-readout dt { font-size: 13px; color: var(--glass-muted, #a3abb4); } .ds-readout dd { margin: 2px 0 0; font-size: 20px; font-weight: 600; line-height: 1.3; font-variant-numeric: tabular-nums; } .ds-readout dd.is-none { color: var(--glass-muted, #a3abb4); font-weight: 500; font-size: 16px; }"
+    },
+    {
+      "name": "Panel with Source Table and Verdict",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat white panel: title row, sources with freshness, and a state-coloured verdict bar.",
+      "html": "<section class=\"ds-panel\"><header class=\"ds-panel-head\"><h2>Ai đang trên xe</h2></header><table class=\"ds-sources\"><tbody><tr><th scope=\"row\">Cảm biến IR ở cửa<small>vừa xong</small></th><td>2 người</td></tr><tr><th scope=\"row\">Camera YOLO<small>3 giây trước</small></th><td>2 người</td></tr></tbody></table><p class=\"ds-verdict is-ok\">IR và camera khớp</p></section>",
+      "css": ".ds-panel { background: var(--panel, #fff); border: 1px solid var(--line, #c8cfd6); border-radius: 6px; color: var(--ink, #16181b); font-family: 'Be Vietnam Pro', system-ui, sans-serif; } .ds-panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px 16px 10px; } .ds-panel-head h2 { margin: 0; font-size: 15px; font-weight: 600; } .ds-sources { width: 100%; border-collapse: collapse; font-size: 14px; } .ds-sources th, .ds-sources td { text-align: left; padding: 9px 16px; border-top: 1px solid var(--line-soft, #e3e7eb); vertical-align: top; } .ds-sources th { font-weight: 500; } .ds-sources small { display: block; font-size: 12px; font-weight: 400; color: var(--muted, #545b63); } .ds-sources td { text-align: right; white-space: nowrap; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; } .ds-verdict { margin: 4px 16px 16px; padding: 8px 12px; border-radius: 4px; font-size: 14px; font-weight: 600; } .ds-verdict.is-ok { background: var(--ok-soft, #e3f2ea); color: #0e5a31; } .ds-verdict.is-warn { background: var(--alert-soft, #fbe5e3); color: var(--reflect-ink, #a81a15); }"
+    },
+    {
+      "name": "Cabin Plan Marker Legend",
+      "kind": "chip",
+      "refersTo": "panel",
+      "description": "The five sensor-marker states of the cabin plan, as shown in its legend strip.",
+      "html": "<ul class=\"ds-legend\"><li class=\"is-ok\"><i></i>Bình thường, không thấy người</li><li class=\"is-active\"><i></i>Đang thấy người</li><li class=\"is-warn\"><i></i>Đang kiểm tra</li><li class=\"is-alert\"><i></i>Báo động / cần xử lý</li><li><i></i>Chưa có dữ liệu</li></ul>",
+      "css": ".ds-legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0; padding: 12px 16px 14px; border-top: 1px solid var(--line-soft, #e3e7eb); list-style: none; font-family: 'Be Vietnam Pro', system-ui, sans-serif; font-size: 13px; color: var(--ink-2, #3b4148); background: #fff; } .ds-legend li { display: inline-flex; align-items: center; gap: 8px; } .ds-legend i { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid var(--ink-2, #3b4148); background: #fff; } .ds-legend .is-ok i { background: var(--ok, #1b7f47); border-color: #0e4f2b; } .ds-legend .is-active i { background: var(--livery, #f2b01e); border-color: var(--ink, #16181b); } .ds-legend .is-warn i { background: #fff; border: 3px solid var(--amber-ink, #8a5300); } .ds-legend .is-alert i { background: var(--reflect, #c8201a); border-color: var(--reflect-ink, #a81a15); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Painted Bus Body",
+    "overview": "The screen is painted like the school bus it is watching. A yellow livery band carries the plate and the connection lights, a full-width reflective strip below it carries the safety state, the camera sits in a dark rounded window like the bus's own glass, and everything else is light grey painted steel with flat white panels riveted on by 1px lines. The world is industrial and plain: one sans family, tabular numbers, small corners, no shadows. Colour is paint and signal, never decoration.\n\nDensity is that of an operations desk, not a marketing page: a working grid that fills a laptop or a wall screen, compact 13–15px text, and three or four facts per panel. Calm is the default. When the bus is fine the strip is white with a green label; when a passenger may be left on board, the strip turns reflector red edge to edge with white-and-red tape, and nothing else on the page competes with it.\n\nThe world explicitly rejects the generic monitoring dashboard: equal-weight metric cards, a dark side navigation and a blue accent. Hierarchy comes from the bus metaphor (livery, strip, window, cabin plan) and from state, not from card grids.",
+    "keyCharacteristics": [
+      "Yellow livery band on top, grey steel desk below, white panels with 1px rules.",
+      "A full-width reflective strip whose single state colour owns the whole band.",
+      "The camera framed in a dark \"glass\" window with a three-fact readout column.",
+      "A top-down cabin plan drawn only in 90° and 45° lines, sensors lit by real state.",
+      "One family (Be Vietnam Pro), tabular figures for every number.",
+      "Flat surfaces; depth only from the dark glass against light steel."
+    ],
+    "rules": [
+      { "name": "The Livery Bar Rule", "body": "Livery yellow fills the top bar and nothing larger than a marker. It never fills a panel, a card, a button or the strip.", "section": "colors" },
+      { "name": "The One State Owns the Strip Rule", "body": "The reflective strip shows exactly one state colour at a time, across the full width. Red is WARNING, amber is CHECK, green text on white is NORMAL, steel grey is OFFLINE or loading.", "section": "colors" },
+      { "name": "The Signal Is Bound to State Rule", "body": "Red, amber and green only appear when a real reading puts them there. Each signal colour has a fill and a darker ink/edge partner; use the ink partner for text on light grounds.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "Be Vietnam Pro only, weights 400–700. No display face, no monospace.", "section": "typography" },
+      { "name": "The Tabular Number Rule", "body": "Every count, clock time, percentage and timestamp uses tabular figures so values never jitter as they update each second.", "section": "typography" },
+      { "name": "The Strip Speaks Loudest Rule", "body": "The strip label is the largest text on the desk. Nothing else may be set larger than 22px.", "section": "typography" },
+      { "name": "The Flat Steel Rule", "body": "No drop shadows, glows or blurs. Separation comes from 1px rules, steel-versus-white grounds and the dark glass.", "section": "elevation" },
+      { "name": "The Only the Window Is Round Rule", "body": "Nothing but the camera glass goes above 6px radius.", "section": "shapes" }
+    ],
+    "dos": [
+      "**Do** let the reflective strip carry the safety state across the full width, one colour at a time, with the label at 22px (26px in WARNING).",
+      "**Do** pair every signal colour with words: markers carry a label and detail line, the legend explains each fill, the strip says the state in text.",
+      "**Do** show source and freshness next to every reading (\"vừa xong\", \"12 giây trước\"), and make stale data look stale: greyscale and dim the frame, drop readouts to Glass Muted, say \"hết hiệu lực\".",
+      "**Do** set every number in tabular figures.",
+      "**Do** draw the cabin plan in 90° and 45° lines only, and swap to the vertical drawing at ≤720px.",
+      "**Do** keep remote-control buttons in equal pairs and disable them, with a reason, when the board is offline."
+    ],
+    "donts": [
+      "**Don't** fill panels, buttons or the strip with Livery Yellow; it belongs to the top bar and to small \"person seen\" marks.",
+      "**Don't** build equal-weight metric cards, a dark side navigation or a blue accent; this world rejects the generic dashboard.",
+      "**Don't** add drop shadows or glows to panels; depth is the dark glass against light steel.",
+      "**Don't** use red, amber or green as decoration; they appear only when a real reading puts them there.",
+      "**Don't** introduce a second typeface or set anything larger than the strip label.",
+      "**Don't** remove a sent command from the list; change its state instead.",
+      "**Don't** round anything beyond 6px except the camera glass (10px)."
+    ]
+  }
+}

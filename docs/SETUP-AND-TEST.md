@@ -67,7 +67,7 @@ backend/.venv/Scripts/python.exe -m pip install -r backend/requirements-ai.txt
 backend/.venv/Scripts/python.exe backend/camera_worker.py --source 0 --preview
 ```
 
-Camera worker chạy trên laptop, không chạy YOLO trên ESP32. Webcam là UVC; có thể dùng đường dẫn video hoặc RTSP ở `--source`. Model `yolov8n.pt` được tải ở lần đầu. Kết quả gửi mỗi 2 giây kèm device key, lưu Atlas và chuyển AI_PRESENCE xuống mạch qua MQTT; dữ liệu AI hết hạn sau 15 giây, không dùng kết quả cũ như quan sát hiện tại. Trang web cũng hỗ trợ upload JPEG/PNG để kiểm thử model; ảnh upload không điều khiển mạch. Worker có bounding box ở cửa sổ preview, chưa stream video lên web.
+Camera worker chạy trên laptop, không chạy YOLO trên ESP32. Webcam là UVC; có thể dùng đường dẫn video hoặc RTSP ở `--source`. Model `yolov8n.pt` được tải ở lần đầu. Kết quả gửi mỗi 2 giây kèm device key, lưu Atlas và chuyển AI_PRESENCE xuống mạch qua MQTT; dữ liệu AI hết hạn sau 15 giây, không dùng kết quả cũ như quan sát hiện tại. Khoảng 1 giây một lần, worker gửi khung hình JPEG đã vẽ bounding box lên `POST /api/camera/frame` (device key); bàn trực lấy khung mới nhất qua `GET /api/camera/frame` (JWT) và báo "hình cũ" nếu quá 5 giây không có khung mới. Chỉnh bằng `--frame-interval` và `--frame-width`. Khung hình chỉ giữ trong bộ nhớ backend, không lưu Atlas. Không có chức năng tải ảnh lên từ web.
 
 ## 5. Nghiệm thu trên mạch
 

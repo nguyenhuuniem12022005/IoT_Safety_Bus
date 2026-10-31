@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font-family:"Be Vietnam Pro",sans-serif;background:#fff;color:#111}
+.top{height:60px;background:#0057A8;color:#fff;display:flex;align-items:center;padding:0 28px;gap:16px}
+.top h1{font-size:18px;font-weight:600}
+.hero{display:flex;align-items:center;gap:32px;padding:28px;border-bottom:1px solid #ddd}
+.tri{width:0;height:0;border-left:90px solid transparent;border-right:90px solid transparent;border-bottom:156px solid #E30613;position:relative}
+.tri:after{content:"";position:absolute;left:-70px;top:22px;border-left:70px solid transparent;border-right:70px solid transparent;border-bottom:121px solid #FFCC00}
+.hero h2{font-size:40px;font-weight:700}
+.hero p{font-size:16px;margin-top:8px;color:#333}
+.grid{display:grid;grid-template-columns:1fr 420px;gap:20px;padding:24px 28px}
+.cam{background:#111;height:480px;border-radius:4px;position:relative}
+.box{position:absolute;left:420px;top:150px;width:140px;height:230px;border:3px solid #FFCC00}
+.panel{border:1px solid #ddd;border-radius:4px;padding:18px}
+.panel h3{font-size:13px;color:#555}
+.big{font-size:60px;font-weight:700}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid #eee;font-size:14px}
+.sign{display:inline-block;width:22px;height:22px;border-radius:50%;border:4px solid #E30613;vertical-align:middle;margin-right:8px}
+</style></head><body>
+<div class="top"><h1>Smart Bus · BUS-01</h1></div>
+<div class="hero"><div class="tri"></div><div><h2>Đang kiểm tra khoang xe</h2><p>Khóa điện OFF · còn 9 giây trước khi báo động</p></div></div>
+<div class="grid"><div class="cam"><div class="box"></div></div>
+<div class="panel"><h3>Sĩ số trên xe</h3><div class="big">1</div>
+<div class="row"><span>Cảm biến IR</span><b>1</b></div><div class="row"><span>Camera YOLO</span><b>1</b></div>
+<div class="row"><span><i class="sign"></i>Còi</span><b>Tắt</b></div><div class="row"><span>Quạt</span><b>Tự động</b></div></div></div>
+</body></html>
